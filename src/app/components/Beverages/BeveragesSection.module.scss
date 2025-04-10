@@ -1,0 +1,94 @@
+.beveragesContainer {
+  padding: 16px;
+  background: #f9f9f9;
+}
+
+.beveragesList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.beverageItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.beverageContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.imageVolumeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  .imageVolumeWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .beverageImage {
+    width: 24px;
+    height: 24px;
+  }
+
+  .volume {
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+  }
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.name {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Базові стилі кнопки */
+.addButton {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Стиль для стану "plus" */
+.plus {
+  background: #FFFFFF;
+  border: 1px solid #E7E7E7;
+}
+
+.plus:hover {
+  background: #f0f0f0; /* Light gray hover ефект для plus */
+}
+
+/* Стиль для стану "check" */
+.check {
+  background: #8DD7AD;
+  border: 1px solid #41BD73;
+}
+

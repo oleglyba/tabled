@@ -1,0 +1,369 @@
+.header {
+
+  height: 20px;
+
+  .logoWrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .logo {
+      height: 100%;
+      max-width: 150px;
+      max-height: 48px;
+      margin-top: 12px;
+    }
+  }
+
+  .title {
+    color: white;
+    font-weight: 700;
+  }
+}
+
+.menuSelect {
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.menuSelectWrapper {
+  position: absolute;
+  z-index: 9999;
+  left: 20px;
+  top: 30px;
+
+  svg {
+    height: 30px;
+    width: 30px;
+  }
+}
+
+.cartWrapper {
+  position: absolute;
+  z-index: 9999;
+  right: 10px;
+  top: 10px;
+  background: #fe4343;
+  border-radius: 30px;
+  padding: 15px 10px;
+  display: flex;
+  align-items: center;
+
+  .cartQuantity {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    padding: 0 5px;
+    color: white;
+  }
+
+  svg {
+    fill: white;
+    height: 30px;
+    width: 30px;
+  }
+}
+
+.cart {
+  background: #ffffff;
+  touch-action: none;
+  width: 100%;
+  height: calc(100% - 80px);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  -webkit-box-shadow: 0px -16px 34px -14px rgba(214,214,214,1);
+  -moz-box-shadow: 0px -16px 34px -14px rgba(214,214,214,1);
+  box-shadow: 0px -16px 34px -14px rgba(214,214,214,1);
+
+  .bar {
+    width: 100%;
+    padding: 10px 0;
+    cursor: pointer;
+    touch-action: none;
+    display: block;
+
+    .line {
+      background: #cccccc;
+      height: 6px;
+      width: 45px;
+      margin: 0 auto 0 auto;
+      border-radius: 6px;
+      display: block;
+    }
+
+  }
+
+  .cartItems {
+    padding: 30px;
+    height: 100%;
+    overflow-y: auto;
+
+    .title {
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.sheet {
+  z-index: 100;
+  position: fixed;
+  left: 2vw;
+  height: calc(100vh + 100px);
+  width: 96vw;
+  border-radius: 12px 12px 0;
+  background: #fff;
+  touch-action: none;
+}
+
+
+.info {
+  padding: 8px;
+  text-align: center;
+  background-color: hsla(0, 0, 80%, .5);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.sections {
+  width: 90%;
+  max-width: 750px;
+  margin: 16px auto 0 auto;
+}
+.videoSection {
+  margin: 20px auto;
+  padding: 16px;
+  max-width: 1200px;
+
+  .sectionTitle {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: left;
+    color: #333;
+  }
+}
+.categorySection {
+  margin-bottom: 16px; // Відступ між категоріями
+}
+
+.categorySection:last-child {
+  margin-bottom: 0; // Прибираємо відступ для останньої категорії
+}
+.categoryTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+
+
+
+/* Top Bar */
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ccc; // Сіра лінія замість тіні
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+}
+
+
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Мінімізуємо простір між логотипом та текстом */
+
+}
+
+//.logo {
+//  width: 48px;         // регулюйте розмір логотипа
+//  height: 48px;        // щоб був колом
+//  border-radius: 50%;  // робимо круг
+//  object-fit: cover;   // щоб логотип не спотворювався
+//  margin-right: 12px;  // відступ між лого та текстом
+//}
+
+.textInfo {
+  display: flex;
+  flex-direction: column;  // Назва та адреса — стовпчиком
+}
+
+.restaurantName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;  // відступ між назвою та адресою
+}
+
+.logo {
+  height: 40px; // Adjust logo height
+  max-width: 120px; // Ensure responsive width
+  object-fit: contain;
+
+
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px; // Space between language button and search icon
+}
+
+.languageButton {
+  border: none;
+  background: #f5f5f5; /* Сірий фон */
+  border-radius: 24px; /* Овальна форма */
+  padding: 8px 20px; /* Більші відступи */
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Більший відступ між текстом SocialLinks стрілкою */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Легкий тіньовий ефект */
+  transition: background 0.3s;
+
+  &:hover {
+    background: #e6e6e6; /* Темніший сірий при наведенні */
+  }
+
+  .languageText {
+    font-weight: 500;
+  }
+
+  .arrowDown {
+    width: 8px; /* Менший розмір */
+    height: 8px;
+    border: solid #666; /* Сірий колір стрілки */
+    border-width: 0 1.5px 1.5px 0; /* Тонші лінії для стрілки */
+    display: inline-block;
+    transform: rotate(45deg); /* Нахил для формування стрілки вниз */
+    margin-left: 4px; /* Трохи відступу зліва */
+    align-self: center;
+    position: relative;
+    top: -2px; /* Ще трохи піднято стрілку */
+  }
+}
+
+.searchButton {
+  border: none;
+  background: #f5f5f5; /* Light gray background */
+  border-radius: 50%; /* Round shape */
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
+
+  &:hover {
+    background: #e0e0e0; /* Slightly darker on hover */
+  }
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: #f9f9f9; /* Gray background */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.closeButton {
+  background: #f5f5f5; /* Match the search button's background */
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto; /* Push to the far right */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 86%; /* Менший розмір */
+}
+
+.searchInput {
+  width: 100%;
+  height:38px;
+  padding: 0 30px 0 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+
+  /* Використовуємо flex для вертикального вирівнювання */
+  display: flex;
+  align-items: center;
+  &:focus {
+    border: 1px solid #171717; /* Змінює бордер на темний при фокусі */
+  }
+}
+
+/* Центруємо placeholder по горизонталі */
+.searchInput::placeholder {
+  width: 100%;
+}
+
+
+.clearButton {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.noResults {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  text-align: center;
+}
+
+.noResults img {
+  max-width: 200px;
+}
+
+.noResults p {
+  font-size: 18px;
+  color: #D0D0D0;
+  font-weight: 500;
+  line-height: 18px;
+
+
+}
+
+.withBottomBanner {
+  padding-bottom: 60px;
+}

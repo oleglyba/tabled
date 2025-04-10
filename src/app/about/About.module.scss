@@ -1,0 +1,144 @@
+@import "../../styles/_bottomBanner";
+
+.aboutPage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #fff; // або інший фоновий колір
+  padding: 20px;
+}
+
+/* Риска під назвою */
+.separator {
+  width: 100%;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 40px 0 16px; // Додано більший відступ зверху та знизу
+}
+
+/* Основний контейнер */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+}
+
+/* Лого та назва */
+.logoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px; // Додає простір між елементами
+  margin-bottom: 20px;
+}
+
+.logo {
+  max-width: 120px;
+  height: auto;
+  object-fit: cover;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  color: #222;
+}
+
+/* Опис закладу */
+.description {
+  max-width: 600px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.6;
+  margin-top: 12px;
+  color: #444;
+}
+
+/* Блок з контактною інформацією */
+.infoContainer {
+  margin-top: 28px;
+  width: 100%;
+  max-width: 600px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); // Легка тінь для ефекту глибини
+}
+
+/* Окремий рядок інформації */
+.infoItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #ddd;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.infoIcon {
+  margin-right: 10px;
+  color: #555;
+  font-size: 1.4rem;
+}
+
+.infoText {
+  flex: 1;
+  font-size: 17px;
+  color: #333;
+  margin: 0 12px;
+}
+
+/* Іконка для копіювання або відкриття лінку */
+.actionIcon {
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+
+}
+
+/* Відображення Copied */
+.copiedText {
+  font-size: 14px;
+  font-weight: 600;
+  color: #41bd73;
+}
+.followUs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100% + 40px); // 100% ширини + 40px
+  margin-top: 30px;
+  margin-bottom:40px;
+  padding: 0 20px; // Додаємо відступи, якщо потрібно
+}
+
+.followUsTitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: #171717;
+  margin: 0;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 10px;
+}
+
+
+.socialIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+
+}
+

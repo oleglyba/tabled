@@ -1,0 +1,59 @@
+.categoryNav {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  border-bottom: 2px solid #F5F5F5;
+  padding: 15px;
+
+  .categoryList {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+
+    &::-webkit-scrollbar {
+      display: none; /* Hide scrollbar for WebKit browsers */
+    }
+  }
+
+  .categoryButton {
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &.activeCategory {
+      background-color: #41bd73;
+      color: white;
+      font-weight: bold;
+    }
+  }
+
+  .separator {
+    height: 25px; /* Vertical line height */
+    width: 2px; /* Vertical line width */
+    background-color: #171717;
+    margin: 0 16px; /* Space around the line */
+  }
+
+  .filterButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5; /* Gray background */
+    border-radius: 50%; /* Circle shape */
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+
+  }
+}

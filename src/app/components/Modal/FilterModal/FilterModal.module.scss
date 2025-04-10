@@ -1,0 +1,198 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000;
+}
+
+.filterModal {
+  background-color: #ffffff;
+  width: 100%;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+.dragHandle {
+  width: 40px;
+  height: 4px;
+  background-color: #d9d9d9;
+  border-radius: 2px;
+  margin: 8px auto;
+}
+
+.filterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #171717;
+  }
+
+  .closeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.modalBody {
+  padding: 16px;
+}
+
+.filterSection {
+  margin-bottom: 16px;
+
+  .sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+
+    h4 {
+      font-size: 16px;
+      font-weight: 500;
+      color: #171717;
+    }
+  }
+
+  .filterList {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+
+    .filterItem {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+
+      .checkboxLabel {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        input {
+          margin-right: 12px;
+          accent-color: #171717;
+
+        }
+
+        span {
+          font-size: 14px;
+          color: #171717;
+        }
+      }
+
+      .infoIcon {
+        margin-left: auto;
+        color: #737373;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.modalFooter {
+  display: flex;
+  gap: 4px; /* Відстань між кнопками */
+  padding: 16px;
+  border-top: 1px solid #f0f0f0;
+
+  button {
+    flex: 1;             // Кожна кнопка займає рівну частину (50% від ширини контейнера)
+    padding: 12px 0;     // Збільшений вертикальний відступ для більшої висоти
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .defaultButton {
+    background-color: #F5F5F5; // Фон для кнопки "To Default"
+    color: #A2A2A2;           // Колір тексту для кнопки "To Default"
+    border: none;
+  }
+
+  .applyButton {
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+  }
+  .applyButton:disabled,
+  .disabled {
+    background-color: #B3E4C7;
+    cursor: not-allowed;
+  }
+}
+
+
+
+.infoModal {
+  position: fixed; /* Make it fixed to stay above the content */
+  top: 20%; /* Adjust this value to move it higher on the screen */
+  left: 50%;
+  transform: translate(-50%, -20%); /* Center horizontally and adjust vertically */
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  padding: 16px;
+  z-index: 1000; /* Ensure it stays above other elements */
+
+  .infoModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h4 {
+      font-size: 16px;
+      font-weight: 500;
+      color: #171717;
+    }
+
+    .closeButton {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+  }
+
+  .infoModalBody {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #737373;
+  }
+}
+
+.infoModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Dim the background */
+  z-index: 999; /* Ensure it is below the modal */
+}
+
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

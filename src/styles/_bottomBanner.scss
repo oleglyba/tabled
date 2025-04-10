@@ -1,0 +1,24 @@
+.bottomBannerContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff; // Колір на всю ширину сторінки
+  border-top: 2px solid #E7E7E7; // Границя, якщо потрібно
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  //z-index: 1000; :)
+}
+
+.bottomBanner {
+  background-color: #41BD73;
+  height: 40px;
+  width: 90%;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

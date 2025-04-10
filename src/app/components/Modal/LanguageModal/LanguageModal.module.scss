@@ -1,0 +1,106 @@
+/* Фон модального вікна */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+
+/* Елемент для перетягування */
+.dragHandle {
+  width: 50px;
+  height: 4px;
+  background: #ccc;
+  border-radius: 2px;
+  margin: 8px auto;
+}
+
+/* Заголовок модального вікна */
+.modalHeader {
+  height: 8vh; /* Наприклад, 8% від висоти вікна */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  /* Додано риску під контейнером заголовка */
+  border-bottom: 1px solid #ccc;
+}
+
+.modalHeader h3 {
+  margin-left: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+
+
+/* Список мов */
+.languageList {
+  list-style: none;
+  padding: 0;
+  margin: 10px;
+}
+
+.languageItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+.flagIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+.checkmark {
+  font-size: 16px;
+  color: #41bd73;
+  visibility: hidden;
+}
+
+.activeLanguage .checkmark {
+  visibility: visible;
+}
+
+/* Анімація модального вікна */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    background: rgba(0, 0, 0, 0);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Заборона прокрутки */
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}

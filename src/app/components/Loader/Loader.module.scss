@@ -1,0 +1,45 @@
+.loaderOverlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loaderContainer {
+  position: relative;
+}
+
+.loaderSvg {
+  width: 10rem;
+  margin-right: 0.5rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loaderBackground {
+  fill: #cccccc;
+}
+
+.loaderFill {
+  fill: #41BD73;
+}
+
+.processingText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: 700;
+}

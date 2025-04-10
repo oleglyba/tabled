@@ -1,0 +1,178 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.slideModal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+.open {
+  transform: translateY(0%);
+}
+
+.closing {
+  transform: translateY(100%);
+}
+
+.sliderHandle {
+  width: 40px;
+  height: 4px;
+  background: #ccc;
+  border-radius: 2px;
+  margin: 8px auto;
+}
+
+.modalContent {
+  padding: 16px;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.orderDetails {
+  font-weight: bold;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.divider {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 16px 0;
+}
+
+.videoInfo {
+  margin: 8px 0;
+}
+
+.priceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.videoPrice {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 4px 0 0;
+}
+
+.modalTitle {
+  font-size: 20px;
+  margin: 8px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chevronIcon {
+  cursor: pointer;
+}
+
+.descriptionWrapper {
+  margin: 0;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.expanded {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+.doughSection,
+.extrasSection {
+  margin-bottom: 16px;
+}
+
+.options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.option {
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.optionLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.leftSide {
+  display: flex;
+  align-items: center;
+}
+
+.leftSide input {
+  margin: 0;
+}
+
+.labelText {
+  margin-left: 4px;
+}
+
+.price {
+  text-align: right;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
+.addToCartButton {
+  flex: 1;
+  margin-left: 8px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: none;
+  padding: 0 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
