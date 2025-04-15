@@ -16,7 +16,6 @@
     white-space: nowrap;
     scrollbar-width: none; /* Hide scrollbar for Firefox */
     -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
-
     &::-webkit-scrollbar {
       display: none; /* Hide scrollbar for WebKit browsers */
     }
@@ -33,27 +32,35 @@
 
     &.activeCategory {
       background-color: #41bd73;
-      color: white;
+      color: #fff;
       font-weight: bold;
     }
   }
 
-  .separator {
-    height: 25px; /* Vertical line height */
-    width: 2px; /* Vertical line width */
-    background-color: #171717;
-    margin: 0 16px; /* Space around the line */
-  }
-
-  .filterButton {
+  // Новий контейнер, що об'єднує сепаратор і кнопку фільтра
+  .filterContainer {
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: #f5f5f5; /* Gray background */
-    border-radius: 50%; /* Circle shape */
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
 
+    // Можна додати gap або margin, якщо потрібно
+    // gap: 10px; // або використайте margin
+
+    .separator {
+      height: 25px;
+      width: 1px;
+      background-color: #E7E7E7;
+      margin-right: 10px; // відступ між сепаратором і кнопкою
+    }
+
+    .filterButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f5; /* Сірий фон */
+      border-radius: 50%;  /* Кругла кнопка */
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
   }
 }

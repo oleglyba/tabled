@@ -15,8 +15,6 @@ const SectionSelect = ({ categories, activeCategory, onCategorySelect, filters }
         setIsFilterOpen((prev) => !prev);
     };
 
-    // Callback, який отримує оновлені фільтри з FilterModal,
-    // диспатчить їх у Redux‑стан та закриває модальне вікно.
     const handleApply = (updatedFilters) => {
         dispatch(updateFilters(updatedFilters));
         toggleFilterModal();
@@ -37,15 +35,20 @@ const SectionSelect = ({ categories, activeCategory, onCategorySelect, filters }
                     </button>
                 ))}
             </div>
-            <div className={styles.separator}></div>
-            <div className={styles.filterButton} onClick={toggleFilterModal}>
-                <Filter size={20} />
+
+            {/** Блок, який містить і сепаратор, і кнопку фільтра */}
+            <div className={styles.filterContainer}>
+                <div className={styles.separator}></div>
+                <div className={styles.filterButton} onClick={toggleFilterModal}>
+                    <Filter size={20} />
+                </div>
             </div>
+
             <FilterModal
                 isOpen={isFilterOpen}
                 onClose={toggleFilterModal}
                 filters={filters}
-                dishCategories={categories}  // передаємо API‑дані
+                dishCategories={categories}
                 onApply={handleApply}
             />
         </div>
