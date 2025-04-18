@@ -5,6 +5,19 @@ import styles from "./VideoGrid.module.scss";
 import MediaSwitcher from "@/app/components/MediaSwitcher/MediaSwitcher";
 import AddToCartButton from "@/app/components/Button/AddToCartButton/AddToCartButton";
 
+const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "";
+
+const transformMediaUrl = (url) => {
+    if (!url) return "";
+
+    let fullUrl = url;
+    if (url.startsWith("/")) {
+        fullUrl = `${MEDIA_BASE_URL}${url}`;
+    }
+
+    return fullUrl.replace("/static/", "/assets/");
+};
+
 const VideoGrid = ({
                        videos = [],
                        searchQuery = "",
@@ -16,7 +29,6 @@ const VideoGrid = ({
                        filters,
                        onOpenModal,
                    }) => {
-    // Додаємо властивість "allergen" для кожного відео на основі масиву allergens
     const enrichedVideos = useMemo(() => {
         return videos.map((video) => ({
             ...video,
@@ -24,7 +36,6 @@ const VideoGrid = ({
         }));
     }, [videos]);
 
-    // Фільтрація відео за пошуковим запитом та активними атрибутами
     const filteredVideos = useMemo(() => {
         let result = enrichedVideos.filter((video) => {
             const translatedName = translations?.[video.title] ?? video.title ?? "";
@@ -42,15 +53,6 @@ const VideoGrid = ({
         return result;
     }, [enrichedVideos, searchQuery, filters.attributes, translations]);
 
-    // if (filteredVideos.length === 0) {
-    //     return (
-    //         <div className={styles.noResults}>
-    //             <img src="/icon/NoItem.svg" alt="No items found" />
-    //             <p>No Items Found</p>
-    //         </div>
-    //     );
-    // }
-
     return (
         <div className={styles.videoGrid}>
             {filteredVideos.map((item) => (
@@ -61,7 +63,7 @@ const VideoGrid = ({
                 >
                     <div className={styles.videoWrapper}>
                         <MediaSwitcher
-                            mediaUrl={item.main_video || item.image || ""}
+                            mediaUrl={transformMediaUrl(item.main_video || item.image || "")}
                             alt={item.title}
                             videoClassName={styles.videoPlayer}
                             imageClassName={styles.imagePlayer}
