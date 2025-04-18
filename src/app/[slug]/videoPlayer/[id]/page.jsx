@@ -21,8 +21,8 @@ import dynamic from "next/dynamic";
 const Loader = dynamic(() => import('@/app/components/Loader/Loader'), { ssr: false });
 
 const isVideo = (url) => {
-    if (!url || typeof url !== "string") return false;
-    const videoExtensions = [".mp4", ".mov", ".webm"];
+    if (!url || typeof url !== 'string') return false;
+    const videoExtensions = ['.mp4', '.mov', '.webm'];
     return videoExtensions.some((ext) => url.endsWith(ext));
 };
 
@@ -31,7 +31,7 @@ const VideoPlayer = () => {
     const cartItems = useSelector((state) => state.cart || []);
     const selectedItems = useSelector((state) => state.selection || []);
     const { id } = useParams();
-    const videoId = parseInt(id || "0", 10);
+    const videoId = parseInt(id || '0', 10);
 
     const { goToCart } = useCartNavigation();
     const { menuData, loading } = useMenuData();
@@ -44,7 +44,7 @@ const VideoPlayer = () => {
     const [muteStates, setMuteStates] = useState({});
     const [openModal, setOpenModal] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState(null);
-    const [expandedVideo, setExpandedVideo] = useState(null);
+    const [expandedVideoId, setExpandedVideoId] = useState(null);
 
     const videosRef = useRef([]);
     const observerRef = useRef(null);
@@ -71,7 +71,9 @@ const VideoPlayer = () => {
 
         setInitialIndex(index);
         videosRef.current = allVideos.map(() => React.createRef());
-        setMuteStates(allVideos.reduce((acc, video) => ({ ...acc, [video.id]: true }), {}));
+        setMuteStates(
+            allVideos.reduce((acc, video) => ({ ...acc, [video.id]: true }), {})
+        );
     }, [videoId, allVideos]);
 
     useEffect(() => {
@@ -80,12 +82,8 @@ const VideoPlayer = () => {
         observerRef.current = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (typeof entry.target.play === "function") {
-                        if (entry.isIntersecting) {
-                            entry.target.play();
-                        } else {
-                            entry.target.pause();
-                        }
+                    if (typeof entry.target.play === 'function') {
+                        entry.isIntersecting ? entry.target.play() : entry.target.pause();
                     }
                 });
             },
@@ -117,7 +115,7 @@ const VideoPlayer = () => {
                     loop
                 >
                     {allVideos.map((video, idx) => {
-                        const isExpanded = expandedVideo === video.id;
+                        const isExpanded = video.id === expandedVideoId;
                         const isSelected = selectedItems.includes(video.id);
 
                         return (
@@ -143,17 +141,28 @@ const VideoPlayer = () => {
                                             />
                                         )}
 
-                                        <div className={`${styles.videoOverlay} ${totalCartQuantity > 0 ? styles.withBanner : ""}`}>
+                                        <div className={`${styles.videoOverlay} ${
+                                            totalCartQuantity > 0 ? styles.withBanner : ''
+                                        }`}>
                                             <div className={styles.videoText}>
                                                 <VideoIndicators
-                                                    video={{ ...video, allergen: video.allergens && video.allergens.length > 0 }}
-                                                    styleIndicator={{ background: "#FFFFFF33" }}
-                                                    styleText={{ color: "#FFFFFF" }}
+                                                    video={{
+                                                        ...video,
+                                                        allergen: video.allergens?.length > 0,
+                                                    }}
+                                                    styleIndicator={{ background: '#FFFFFF33' }}
+                                                    styleText={{ color: '#FFFFFF' }}
                                                 />
 
-                                                <p className={styles.videoPrice}>€{video.price.toFixed(2)}</p>
+                                                <p className={styles.videoPrice}>
+                                                    €{video.price.toFixed(2)}
+                                                </p>
                                                 <h3 className={styles.videoTitle}>{video.title}</h3>
-                                                <p className={`${styles.videoDescription} ${isExpanded ? styles.expanded : ""}`}>
+                                                <p
+                                                    className={`${styles.videoDescription} ${
+                                                        isExpanded ? styles.expanded : ''
+                                                    }`}
+                                                >
                                                     {video.description}
                                                 </p>
                                             </div>
@@ -161,18 +170,34 @@ const VideoPlayer = () => {
                                             <div className={styles.actionButtons}>
                                                 <button
                                                     className={styles.expandButton}
-                                                    onClick={() => setExpandedVideo(isExpanded ? null : video.id)}
+                                                    onClick={() =>
+                                                        setExpandedVideoId(isExpanded ? null : video.id)
+                                                    }
                                                 >
-                                                    {isExpanded ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+                                                    {isExpanded ? (
+                                                        <ChevronDown size={18} />
+                                                    ) : (
+                                                        <ChevronUp size={18} />
+                                                    )}
                                                 </button>
                                                 <button
-                                                    className={`${styles.addToCartButton} ${isSelected ? styles.checked : styles.plus}`}
+                                                    className={`${styles.addToCartButton} ${
+                                                        isSelected ? styles.checked : styles.plus
+                                                    }`}
                                                     onClick={() => openSlideModal(video)}
                                                 >
                                                     {isSelected ? (
-                                                        <img src="/icon/check.svg" alt="Added" className={styles.icon} />
+                                                        <img
+                                                            src="/icon/check.svg"
+                                                            alt="Added"
+                                                            className={styles.icon}
+                                                        />
                                                     ) : (
-                                                        <img src="/icon/plus.svg" alt="Add to Cart" className={styles.icon} />
+                                                        <img
+                                                            src="/icon/plus.svg"
+                                                            alt="Add to Cart"
+                                                            className={styles.icon}
+                                                        />
                                                     )}
                                                 </button>
                                             </div>
