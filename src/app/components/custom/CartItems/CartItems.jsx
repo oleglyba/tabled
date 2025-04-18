@@ -8,8 +8,8 @@ import styles from "./CartItems.module.scss";
 import QuantityControl from "@/app/components/Button/QuantityControl/QuantityControl";
 import ImageWithFallback from "@/app/components/ImageWithFallback/ImageWithFallback";
 import VideoIndicators from "@/app/components/custom/VideoIndicators/VideoIndicators";
-import { transformMediaUrl } from "@/utils/transformMediaUrl";
 
+// Функція для перевірки, чи URL вказує на відео
 const isVideo = (url) => {
     if (!url || typeof url !== "string") return false;
     const videoExtensions = [".mp4", ".mov", ".webm"];
@@ -21,6 +21,7 @@ export default function CartItems() {
     const cartItems = useSelector((state) => state.cart);
     console.log("[CartItems] cartItems:", cartItems);
 
+    // Обробляємо товари, додатково обчислюючи allergen, якщо потрібно
     const processedCartItems = cartItems.map((item) => ({
         ...item,
         allergen: item.allergen || (Array.isArray(item.allergens) && item.allergens.length > 0),
@@ -33,32 +34,42 @@ export default function CartItems() {
             {processedCartItems.length > 0 ? (
                 processedCartItems.map((cartItem) => {
                     console.log("[CartItems] Рендеримо item:", cartItem);
+                    // Забезпечуємо числові значення для price та quantity
                     const price = Number(cartItem.price) || 0;
                     const quantity = Number(cartItem.quantity) || 0;
+                    // Обчислюємо загальну вартість
                     const computedTotal = price * quantity;
+                    // Якщо є поле totalPrice, використовуємо його (як число)
                     const totalFromCart = Number(cartItem.totalPrice);
                     const itemPrice = isNaN(totalFromCart) ? computedTotal : totalFromCart;
 
                     const handleIncrement = () => {
-                        dispatch(updateCartQuantity({
-                            id: cartItem.id,
-                            quantity: quantity + 1,
-                        }));
+                        console.log("[CartItems] Increment for:", cartItem.id);
+                        dispatch(
+                            updateCartQuantity({
+                                id: cartItem.id,
+                                quantity: quantity + 1,
+                            })
+                        );
                     };
 
                     const handleDecrement = () => {
                         const newQuantity = quantity - 1;
+                        console.log("[CartItems] Decrement for:", cartItem.id, "newQuantity:", newQuantity);
                         if (newQuantity > 0) {
-                            dispatch(updateCartQuantity({
-                                id: cartItem.id,
-                                quantity: newQuantity,
-                            }));
+                            dispatch(
+                                updateCartQuantity({
+                                    id: cartItem.id,
+                                    quantity: newQuantity,
+                                })
+                            );
                         } else {
                             dispatch(removeFromCart(cartItem.id));
                             dispatch(removeSelection(cartItem.id));
                         }
                     };
 
+                    // Перевіряємо, чи є індикатори
                     const hasIndicators = cartItem.new || cartItem.vegetarian || cartItem.allergen || cartItem.weight;
                     const cartItemClass = hasIndicators
                         ? styles.cartItem
@@ -67,15 +78,13 @@ export default function CartItems() {
                         ? styles.descriptionWrapper
                         : `${styles.descriptionWrapper} ${styles.centerDescriptionWrapper}`;
 
-                    const mediaUrl = transformMediaUrl(cartItem.mediaUrl || "");
-
                     return (
                         <div key={cartItem.id} className={cartItemClass}>
                             <div className={styles.mediaWrapper}>
-                                {isVideo(mediaUrl) ? (
+                                {isVideo(cartItem.mediaUrl) ? (
                                     <video
                                         className={styles.videoPlayer}
-                                        src={mediaUrl}
+                                        src={cartItem.mediaUrl}
                                         preload="metadata"
                                         autoPlay
                                         loop
@@ -86,7 +95,7 @@ export default function CartItems() {
                                 ) : (
                                     <ImageWithFallback
                                         className={styles.imagePlayer}
-                                        src={mediaUrl}
+                                        src={cartItem.mediaUrl}
                                         alt={cartItem.name || cartItem.title}
                                     />
                                 )}
@@ -98,12 +107,8 @@ export default function CartItems() {
                                     </div>
                                 )}
                                 <div className={styles.info}>
-                                    <div className={styles.name}>
-                                        {cartItem.title || cartItem.name}
-                                    </div>
-                                    <div className={styles.price}>
-                                        € {itemPrice.toFixed(2)}
-                                    </div>
+                                    <div className={styles.name}>{cartItem.title || cartItem.name}</div>
+                                    <div className={styles.price}>€ {itemPrice.toFixed(2)}</div>
                                 </div>
                             </div>
                             <div className={styles.quantityControl}>
