@@ -4,19 +4,7 @@ import React, { useMemo } from "react";
 import styles from "./VideoGrid.module.scss";
 import MediaSwitcher from "@/app/components/MediaSwitcher/MediaSwitcher";
 import AddToCartButton from "@/app/components/Button/AddToCartButton/AddToCartButton";
-
-const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "";
-
-const transformMediaUrl = (url) => {
-    if (!url) return "";
-
-    let fullUrl = url;
-    if (url.startsWith("/")) {
-        fullUrl = `${MEDIA_BASE_URL}${url}`;
-    }
-
-    return fullUrl.replace("/static/", "/assets/");
-};
+import {transformMediaUrl} from "@/utils/transformMediaUrl";
 
 const VideoGrid = ({
                        videos = [],

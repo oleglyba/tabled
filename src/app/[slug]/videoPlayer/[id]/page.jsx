@@ -16,8 +16,9 @@ import VideoIndicators from "@/app/components/custom/VideoIndicators/VideoIndica
 import TopBar from "@/app/components/TopBar/TopBar";
 import useMenuData from "@/app/hook/data/useMenuData";
 
-// Додаємо Loader із динамічного імпорту
+// Loader (динамічний імпорт)
 import dynamic from "next/dynamic";
+import {transformMediaUrl} from "@/utils/transformMediaUrl";
 const Loader = dynamic(() => import('@/app/components/Loader/Loader'), { ssr: false });
 
 const isVideo = (url) => {
@@ -97,7 +98,6 @@ const VideoPlayer = () => {
         return () => observerRef.current.disconnect();
     }, [allVideos]);
 
-    // Якщо дані ще завантажуються або initialIndex ще не встановлено, відображаємо Loader
     if (loading || initialIndex === null) {
         return <Loader processing={true} />;
     }
@@ -117,6 +117,7 @@ const VideoPlayer = () => {
                     {allVideos.map((video, idx) => {
                         const isExpanded = video.id === expandedVideoId;
                         const isSelected = selectedItems.includes(video.id);
+                        const mediaUrl = transformMediaUrl(video.main_video || video.image || "");
 
                         return (
                             <SwiperSlide key={video.id}>
@@ -124,10 +125,10 @@ const VideoPlayer = () => {
                                     <div className={styles.videoWrapper}>
                                         <TopBar />
 
-                                        {isVideo(video.main_video) ? (
+                                        {isVideo(mediaUrl) ? (
                                             <video
                                                 ref={videosRef.current[idx]}
-                                                src={video.main_video}
+                                                src={mediaUrl}
                                                 loop
                                                 muted={muteStates[video.id]}
                                                 autoPlay
@@ -135,15 +136,13 @@ const VideoPlayer = () => {
                                             />
                                         ) : (
                                             <ImageWithFallback
-                                                src={video.image}
+                                                src={mediaUrl}
                                                 alt={video.title}
                                                 className={styles.videoElement}
                                             />
                                         )}
 
-                                        <div className={`${styles.videoOverlay} ${
-                                            totalCartQuantity > 0 ? styles.withBanner : ''
-                                        }`}>
+                                        <div className={`${styles.videoOverlay} ${totalCartQuantity > 0 ? styles.withBanner : ''}`}>
                                             <div className={styles.videoText}>
                                                 <VideoIndicators
                                                     video={{
@@ -158,11 +157,7 @@ const VideoPlayer = () => {
                                                     €{video.price.toFixed(2)}
                                                 </p>
                                                 <h3 className={styles.videoTitle}>{video.title}</h3>
-                                                <p
-                                                    className={`${styles.videoDescription} ${
-                                                        isExpanded ? styles.expanded : ''
-                                                    }`}
-                                                >
+                                                <p className={`${styles.videoDescription} ${isExpanded ? styles.expanded : ''}`}>
                                                     {video.description}
                                                 </p>
                                             </div>
@@ -181,9 +176,7 @@ const VideoPlayer = () => {
                                                     )}
                                                 </button>
                                                 <button
-                                                    className={`${styles.addToCartButton} ${
-                                                        isSelected ? styles.checked : styles.plus
-                                                    }`}
+                                                    className={`${styles.addToCartButton} ${isSelected ? styles.checked : styles.plus}`}
                                                     onClick={() => openSlideModal(video)}
                                                 >
                                                     {isSelected ? (
