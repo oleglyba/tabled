@@ -1,45 +1,63 @@
-// app/hooks/useCategoryObserver.js
 import { useEffect, useRef } from "react";
 
 const useCategoryObserver = ({ categoryRefs, videoCategories, scrollingManually, setActiveCategory }) => {
     const observer = useRef(null);
 
     useEffect(() => {
+        if (observer.current) observer.current.disconnect();
+
         observer.current = new IntersectionObserver(
             (entries) => {
                 if (scrollingManually) return;
-                let foundVisibleCategory = false;
-                entries.forEach((entry) => {
+
+                let bestMatch = null;
+                let fallbackTop = Number.POSITIVE_INFINITY;
+                let fallbackSlug = null;
+
+                for (const entry of entries) {
+                    const el = entry.target;
+                    const slug = Object.entries(categoryRefs.current).find(([_, val]) => val === el)?.[0];
+
+                    const top = el.getBoundingClientRect().top;
+
+                    // основне: видимі
                     if (entry.isIntersecting) {
-                        const visibleCategory = videoCategories.find(
-                            (category) => categoryRefs.current[category.slug] === entry.target
-                        );
-                        if (visibleCategory) {
-                            setActiveCategory(visibleCategory.slug);
-                            foundVisibleCategory = true;
+                        if (!bestMatch || entry.intersectionRatio > bestMatch.intersectionRatio) {
+                            bestMatch = entry;
                         }
                     }
-                });
-                if (!foundVisibleCategory && window.scrollY === 0 && videoCategories.length > 0) {
-                    setActiveCategory(videoCategories[0].slug);
+
+                    // fallback: найвище вікно
+                    if (top < fallbackTop && top > 0 && slug) {
+                        fallbackTop = top;
+                        fallbackSlug = slug;
+                    }
+                }
+
+                if (bestMatch) {
+                    const visibleCategory = videoCategories.find(
+                        (category) => categoryRefs.current[category.slug] === bestMatch.target
+                    );
+                    if (visibleCategory) {
+                        setActiveCategory(visibleCategory.slug);
+                    }
+                } else if (fallbackSlug) {
+                    setActiveCategory(fallbackSlug);
                 }
             },
             {
-                rootMargin: "-20% 0px -50% 0px",
-                threshold: 0.2,
+                rootMargin: "-5% 0px -85% 0px", // менша межа знизу
+                threshold: [0, 0.01, 0.1, 0.25, 0.5, 0.75, 1],
             }
         );
 
         videoCategories.forEach((category) => {
-            if (categoryRefs.current[category.slug]) {
-                observer.current.observe(categoryRefs.current[category.slug]);
-            }
+            const el = categoryRefs.current[category.slug];
+            if (el) observer.current.observe(el);
         });
 
-        return () => {
-            if (observer.current) observer.current.disconnect();
-        };
-    }, [categoryRefs, videoCategories, scrollingManually, setActiveCategory]);
+        return () => observer.current && observer.current.disconnect();
+    }, [videoCategories.map(c => c.slug).join(","), scrollingManually]);
 };
 
 export default useCategoryObserver;

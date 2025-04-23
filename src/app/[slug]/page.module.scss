@@ -151,6 +151,8 @@
 }
 .categorySection {
   margin-bottom: 16px; // Відступ між категоріями
+  min-height: 160px; // ⬅️ Додає мінімальну висоту, щоб навіть малі категорії враховувались
+
 }
 
 .categorySection:last-child {
