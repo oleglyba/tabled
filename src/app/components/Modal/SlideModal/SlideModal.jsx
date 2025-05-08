@@ -28,6 +28,7 @@ const SlideModal = ({ open, onClose, video, onAddToCart }) => {
     const [selectedDoughPrice, setSelectedDoughPrice] = useState(0);
     const [selectedExtras, setSelectedExtras] = useState([]);
     const [showDescription, setShowDescription] = useState(false);
+    const slug = useSelector((state) => state.params.slug);
 
     // Функція скидання стану модального вікна
     const resetModal = useCallback(() => {
@@ -98,6 +99,7 @@ const SlideModal = ({ open, onClose, video, onAddToCart }) => {
             extrasPrice: extrasPrice,
             quantity: quantity,
             totalPrice: totalPrice,
+            slug
         });
         // Позначаємо товар як вибраний (для відображення галочки)
         dispatch(toggleSelection(video.id));

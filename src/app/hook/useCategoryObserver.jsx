@@ -1,6 +1,11 @@
 import { useEffect, useRef } from "react";
 
-const useCategoryObserver = ({ categoryRefs, videoCategories, scrollingManually, setActiveCategory }) => {
+const useCategoryObserver = ({
+                                 categoryRefs,
+                                 videoCategories,
+                                 scrollingManually,
+                                 setActiveCategory
+                             }) => {
     const observer = useRef(null);
 
     useEffect(() => {
@@ -10,54 +15,47 @@ const useCategoryObserver = ({ categoryRefs, videoCategories, scrollingManually,
             (entries) => {
                 if (scrollingManually) return;
 
-                let bestMatch = null;
-                let fallbackTop = Number.POSITIVE_INFINITY;
-                let fallbackSlug = null;
+                let best = null;
+                let fallback = { top: Infinity, slug: null };
 
-                for (const entry of entries) {
+                entries.forEach((entry) => {
                     const el = entry.target;
-                    const slug = Object.entries(categoryRefs.current).find(([_, val]) => val === el)?.[0];
-
+                    const slug = Object.keys(categoryRefs.current).find(
+                        (key) => categoryRefs.current[key] === el
+                    );
                     const top = el.getBoundingClientRect().top;
 
-                    // основне: видимі
                     if (entry.isIntersecting) {
-                        if (!bestMatch || entry.intersectionRatio > bestMatch.intersectionRatio) {
-                            bestMatch = entry;
+                        if (!best || entry.intersectionRatio > best.intersectionRatio) {
+                            best = { entry, slug };
                         }
                     }
 
-                    // fallback: найвище вікно
-                    if (top < fallbackTop && top > 0 && slug) {
-                        fallbackTop = top;
-                        fallbackSlug = slug;
+                    if (top > 0 && top < fallback.top && slug) {
+                        fallback = { top, slug };
                     }
-                }
+                });
 
-                if (bestMatch) {
-                    const visibleCategory = videoCategories.find(
-                        (category) => categoryRefs.current[category.slug] === bestMatch.target
-                    );
-                    if (visibleCategory) {
-                        setActiveCategory(visibleCategory.slug);
-                    }
-                } else if (fallbackSlug) {
-                    setActiveCategory(fallbackSlug);
+                if (best) {
+                    setActiveCategory(best.slug);
+                } else if (fallback.slug) {
+                    setActiveCategory(fallback.slug);
                 }
             },
             {
-                rootMargin: "-5% 0px -85% 0px", // менша межа знизу
+                rootMargin: "-5% 0px -85% 0px",
                 threshold: [0, 0.01, 0.1, 0.25, 0.5, 0.75, 1],
             }
         );
 
-        videoCategories.forEach((category) => {
-            const el = categoryRefs.current[category.slug];
+        // observe each category section
+        videoCategories.forEach((cat) => {
+            const el = categoryRefs.current[cat.slug];
             if (el) observer.current.observe(el);
         });
 
-        return () => observer.current && observer.current.disconnect();
-    }, [videoCategories.map(c => c.slug).join(","), scrollingManually]);
+        return () => observer.current.disconnect();
+    }, [videoCategories, scrollingManually, setActiveCategory, categoryRefs]);
 };
 
 export default useCategoryObserver;

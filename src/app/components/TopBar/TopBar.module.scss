@@ -1,6 +1,7 @@
 .topBar {
   position: absolute;
-  top: 16px;
+  /* враховуємо висоту статус-бару + 16px відступ */
+  top: calc(env(safe-area-inset-top) + 16px);
   left: 16px;
   right: 16px;
   display: flex;
@@ -8,6 +9,7 @@
   align-items: center;
   z-index: 10;
 }
+
 .controlButtons {
   display: flex;
   gap: 10px;
@@ -24,14 +26,14 @@
   justify-content: center;
   transition: background-color 0.3s ease;
   cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
 }
 
-.cartWrapper:hover {
-  background: rgba(0, 0, 0, 0.8);
-}
 .cartIcon {
   fill: white;
-  height: 20px;
   width: 20px;
+  height: 20px;
 }
-

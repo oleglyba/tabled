@@ -1,70 +1,109 @@
 import { createSlice } from '@reduxjs/toolkit';
 import isEqual from 'lodash/isEqual';
 
-// Helper functions для роботи з localStorage
-const saveCartToStorage = (cart) => {
-    if (typeof window !== 'undefined') {
-        localStorage.setItem('cart', JSON.stringify(cart));
+const CART_EXPIRATION_MS = 24 * 60 * 60 * 1000;
+const getCartStorageKey = (slug) => `cart_${slug}`;
+
+const saveCartToStorage = (cart, slug) => {
+    if (typeof window !== 'undefined' && slug) {
+        const payload = { data: cart, savedAt: Date.now() };
+        localStorage.setItem(getCartStorageKey(slug), JSON.stringify(payload));
     }
 };
 
-const initialState = []; // завжди початковий стан — порожній масив (для SSR)
+export const loadCartFromStorage = (slug) => {
+    if (typeof window === 'undefined' || !slug) return [];
+    const raw = localStorage.getItem(getCartStorageKey(slug));
+    if (!raw) return [];
+    try {
+        const { data, savedAt } = JSON.parse(raw);
+        if (!savedAt || Date.now() - savedAt > CART_EXPIRATION_MS) {
+            localStorage.removeItem(getCartStorageKey(slug));
+            return [];
+        }
+        return data || [];
+    } catch (err) {
+        console.error('Error parsing cart from storage:', err);
+        return [];
+    }
+};
 
 const cartSlice = createSlice({
     name: 'cart',
-    initialState,
+    initialState: {},
     reducers: {
-        // Дія для гідратації стану кошика (з client-side localStorage)
-        hydrateCart: (state, action) => {
-            return action.payload;
+        hydrateCart: (_state, action) => {
+            // action.payload is expected to be an object { [slug]: [...] }
+            return action.payload || {};
         },
+
         addToCart: (state, action) => {
             const newItem = action.payload;
-            const existingItem = state.find(item =>
+            const slug = newItem.slug;
+            if (!slug) return;
+
+            const cart = state[slug] || [];
+            const existing = cart.find(item =>
                 item.id === newItem.id &&
                 item.dough === newItem.dough &&
                 isEqual(item.extras, newItem.extras)
             );
 
-            if (existingItem) {
-                existingItem.quantity += newItem.quantity || 1;
-                existingItem.totalPrice = (
-                    (existingItem.basePrice + existingItem.doughPrice + existingItem.extrasPrice) *
-                    existingItem.quantity
+            if (existing) {
+                existing.quantity += newItem.quantity || 1;
+                existing.totalPrice = (
+                    (existing.basePrice + existing.doughPrice + existing.extrasPrice) *
+                    existing.quantity
                 ).toFixed(2);
             } else {
-                state.push({
+                cart.push({
                     ...newItem,
                     quantity: newItem.quantity || 1,
-                    // Обчислюємо allergen: true, якщо в newItem.allergens є хоча б один елемент
                     allergen: Array.isArray(newItem.allergens) && newItem.allergens.length > 0
                 });
             }
-            saveCartToStorage(state);
+
+            state[slug] = cart;
+            saveCartToStorage(cart, slug);
         },
+
         removeFromCart: (state, action) => {
-            const updated = state.filter(item => item.id !== action.payload);
-            saveCartToStorage(updated);
-            return updated;
+            const { id, slug } = action.payload;
+            if (!slug || !state[slug]) return;
+            state[slug] = state[slug].filter(item => item.id !== id);
+            saveCartToStorage(state[slug], slug);
         },
+
         updateCartQuantity: (state, action) => {
-            const { id, quantity } = action.payload;
-            const item = state.find(item => item.id === id);
-            if (item) {
-                item.quantity = quantity;
-                item.totalPrice = (
-                    (item.basePrice + item.doughPrice + item.extrasPrice) *
-                    item.quantity
-                ).toFixed(2);
-            }
-            saveCartToStorage(state);
+            const { id, quantity, slug } = action.payload;
+            if (!slug || !state[slug]) return;
+            const item = state[slug].find(i => i.id === id);
+            if (!item) return;
+
+            item.quantity = quantity;
+            item.totalPrice = (
+                (item.basePrice + item.doughPrice + item.extrasPrice) *
+                item.quantity
+            ).toFixed(2);
+
+            saveCartToStorage(state[slug], slug);
         },
-        clearCart: () => {
-            saveCartToStorage([]);
-            return [];
-        }
-    }
+
+        clearCart: (state, action) => {
+            const { slug } = action.payload;
+            if (!slug) return;
+            state[slug] = [];
+            saveCartToStorage([], slug);
+        },
+    },
 });
 
-export const { hydrateCart, addToCart, removeFromCart, updateCartQuantity, clearCart } = cartSlice.actions;
+export const {
+    hydrateCart,
+    addToCart,
+    removeFromCart,
+    updateCartQuantity,
+    clearCart
+} = cartSlice.actions;
+
 export default cartSlice.reducer;

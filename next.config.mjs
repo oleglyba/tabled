@@ -1,4 +1,8 @@
+// next.config.mjs
+
+/** @type {import('next').NextConfig} */
 const nextConfig = {
+    // Add SVGR support for importing SVGs as React components
     webpack(config) {
         config.module.rules.push({
             test: /\.svg$/,
@@ -6,10 +10,9 @@ const nextConfig = {
         });
         return config;
     },
-    i18n: {
-        locales: ['en', 'de', 'fr', 'es', 'pl', 'it', 'ua'],
-        defaultLocale: 'en',
-    },
+
+    // If you need any other Next.js config options, add them here.
+    // Internationalization is handled exclusively in next-i18next.config.js
 };
 
 export default nextConfig;

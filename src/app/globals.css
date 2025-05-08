@@ -1,6 +1,30 @@
-body {
+/* Reset and base */
+* {
+    box-sizing: border-box;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Poppins", "Arial", "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #111111;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+
+}
+input, textarea {
+    font-size: 16px !important;
+}
+
+/* Ensure Outfit is prioritized and consistent */
+body {
+    font-family: 'Outfit', 'Poppins', 'Segoe UI', 'Roboto', 'Arial', sans-serif;
 }

@@ -31,7 +31,7 @@
   position: absolute;
   z-index: 9999;
   left: 20px;
-  top: 30px;
+  top: calc(env(safe-area-inset-top, 0px) + 10px); // або 30px відповідно
 
   svg {
     height: 30px;
@@ -112,10 +112,10 @@
 }
 
 .sheet {
+  height: calc(100dvh + 100px);
   z-index: 100;
   position: fixed;
   left: 2vw;
-  height: calc(100vh + 100px);
   width: 96vw;
   border-radius: 12px 12px 0;
   background: #fff;
@@ -174,7 +174,7 @@
   align-items: center;
   padding: 15px 16px;
   background-color: #ffffff;
-  border-bottom: 1px solid #ccc; // Сіра лінія замість тіні
+  border-bottom: 1px solid #E7E7E7; // Сіра лінія замість тіні
   position: sticky;
   top: 0;
   z-index: 10;
@@ -309,29 +309,30 @@
   align-items: center;
   width: 86%; /* Менший розмір */
 }
-
 .searchInput {
   width: 100%;
-  height:38px;
+  height: 38px;
   padding: 0 30px 0 10px;
-  font-size: 14px;
+  font-size: 16px; /* згідно макету */
+  font-weight: 300;
+  font-family: 'Outfit', sans-serif;
+  line-height: 130%;
+  color: #111111;
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
 
-  /* Використовуємо flex для вертикального вирівнювання */
-  display: flex;
-  align-items: center;
   &:focus {
-    border: 1px solid #171717; /* Змінює бордер на темний при фокусі */
+    border: 1px solid #171717;
+  }
+
+  &::placeholder {
+    color: #A2A2A2; /* як у макеті */
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 130%;
   }
 }
-
-/* Центруємо placeholder по горизонталі */
-.searchInput::placeholder {
-  width: 100%;
-}
-
 
 .clearButton {
   position: absolute;
@@ -365,7 +366,22 @@
 
 
 }
+.pageWrapper {
+  background-color: #F5F5F5;
+  min-height: 100vh;        /* щоб фон тягнувся на всю висоту */
+  display: flex;
+  flex-direction: column;   /* якщо вам потрібно вкладати child-елементи вертикально */
+}
 
 .withBottomBanner {
   padding-bottom: 60px;
 }
+.contentDivider {
+  width: 100%;
+  height: 8px;
+  background-color: #D0D0D0;                 /* основний світло-сірий колір */
+  //border-top: 1px solid rgba(0, 0, 0, 0.2);   /* тонка лінія Black/20 зверху */
+  margin-top: 12px;    /* підганяй 12px під своє завдання */
+
+}
+

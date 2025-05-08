@@ -2,27 +2,32 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
+import { Trash2 } from "lucide-react";
 
 import styles from "./Cart.module.scss";
-import { clearCart } from "@/redux/slices/cartSlice";
-import { clearSelection, toggleSelection as toggleSelectionAction } from "@/redux/slices/selectionSlice";
-import { addToCart } from "@/redux/slices/cartSlice";
+import { clearCart, addToCart } from "@/redux/slices/cartSlice";
+import {
+    clearSelection,
+    toggleSelection as toggleSelectionAction,
+} from "@/redux/slices/selectionSlice";
 
 import CartItems from "@/app/components/custom/CartItems/CartItems";
 import VideoGrid from "@/app/components/VideoGrid/VideoGrid";
 import SlideModal from "@/app/components/Modal/SlideModal/SlideModal";
 import useMenuData from "@/app/hook/data/useMenuData";
+import { useGoHome } from "@/app/hook/useGoHome";
 
-const Loader = dynamic(() => import('../../components/Loader/Loader'), { ssr: false });
+const Loader = dynamic(
+    () => import("../../components/Loader/Loader"),
+    { ssr: false }
+);
 
-const CartPage = () => {
+function CartPage() {
     const dispatch = useDispatch();
-    const router = useRouter();
-
-    const cartItems = useSelector((state) => state.cart);
+    const goHome = useGoHome();
+    const slug = useSelector((state) => state.params.slug);
+    const cartItems = useSelector((state) => state.cart[slug] || []);
     const selectedItems = useSelector((state) => state.selection) || [];
 
     const [openModal, setOpenModal] = useState(false);
@@ -35,28 +40,19 @@ const CartPage = () => {
         setIsMounted(true);
     }, []);
 
-    // Не робимо ранній return, щоб всі хуки викликались завжди.
-    const isReady = isMounted && !loading && menuData;
+    const isReady = isMounted && !loading && !!menuData;
 
     const handleClearCart = () => {
-        dispatch(clearCart());
+        dispatch(clearCart({ slug }));
         dispatch(clearSelection());
-    };
-
-    const handleGoBack = () => {
-        router.push("/restaurant");
     };
 
     const openSlideModal = (product) => {
         setSelectedProduct(product);
         setOpenModal(true);
     };
+    const closeSlideModal = () => setOpenModal(false);
 
-    const closeSlideModal = () => {
-        setOpenModal(false);
-    };
-
-    // Локальна функція для перемикання вибору, яка викликає відповідний екшен Redux
     const handleToggleSelection = (id) => {
         dispatch(toggleSelectionAction(id));
     };
@@ -66,35 +62,36 @@ const CartPage = () => {
             addToCart({
                 ...productWithOptions,
                 quantity: productWithOptions.quantity || 1,
+                slug,
             })
         );
         closeSlideModal();
     };
 
-    const totalPrice = cartItems.reduce((acc, item) => {
+    const totalPrice = cartItems.reduce((sum, item) => {
         const price = parseFloat(item.price) || 0;
-        const quantity = Number(item.quantity) || 0;
-        const computedTotal = price * quantity;
-        const itemPrice =
-            item.totalPrice !== undefined && item.totalPrice !== null
-                ? parseFloat(item.totalPrice) || computedTotal
-                : computedTotal;
-        return acc + itemPrice;
+        const qty = Number(item.quantity) || 0;
+        const base = price * qty;
+        const itemTotal =
+            item.totalPrice != null ? parseFloat(item.totalPrice) || base : base;
+        return sum + itemTotal;
     }, 0);
 
-    // Завжди викликаємо цей useMemo
-    const allMenuItems = useMemo(() => {
-        if (!menuData || !Array.isArray(menuData.menu_categories)) return [];
-        return menuData.menu_categories.flatMap((cat) => cat.menu_items || []);
-    }, [menuData]);
+    const allMenuItems = useMemo(
+        () =>
+            menuData?.menu_categories
+                ?.flatMap((cat) => cat.menu_items || [])
+                .filter(Boolean) || [],
+        [menuData]
+    );
 
-    // Завжди викликаємо цей useMemo
-    const recommendedItems = useMemo(() => {
-        if (!Array.isArray(allMenuItems) || !Array.isArray(cartItems)) return [];
-        return allMenuItems.filter(
-            (item) => !cartItems.some((cartItem) => cartItem.id === item.id)
-        );
-    }, [allMenuItems, cartItems]);
+    const recommendedItems = useMemo(
+        () =>
+            allMenuItems.filter(
+                (mi) => !cartItems.some((ci) => ci.id === mi.id)
+            ),
+        [allMenuItems, cartItems]
+    );
 
     const recommendedCategory = {
         id: "recommended",
@@ -103,7 +100,6 @@ const CartPage = () => {
         index: 0,
     };
 
-    // Якщо дані ще не готові, відображаємо Loader
     if (!isReady) {
         return <Loader processing={true} />;
     }
@@ -111,7 +107,7 @@ const CartPage = () => {
     return (
         <div className={styles.cartPage}>
             <header className={styles.header}>
-                <button className={styles.backButton} onClick={handleGoBack}>
+                <button className={styles.backButton} onClick={goHome}>
                     <img src="/icon/arrow.svg" alt="Back" />
                 </button>
                 <h2 className={styles.headerTitle}>Chosen Items</h2>
@@ -132,11 +128,10 @@ const CartPage = () => {
                 )}
             </div>
 
-            <button className={styles.addMoreButton} onClick={handleGoBack}>
+            <button className={styles.addMoreButton} onClick={goHome}>
                 + Add More
             </button>
 
-            {/* Блок "People also added" */}
             {recommendedItems.length > 0 && (
                 <div className={styles.peopleAlsoAddedSection}>
                     <h3>People also added</h3>
@@ -158,7 +153,9 @@ const CartPage = () => {
             <div className={styles.cartFooter}>
                 <div className={styles.totalInfo}>
                     <div className={styles.totalLabel}>Total:</div>
-                    <div className={styles.totalValue}>${totalPrice.toFixed(2)}</div>
+                    <div className={styles.totalValue}>
+                        ${totalPrice.toFixed(2)}
+                    </div>
                 </div>
                 <button className={styles.orderButton}>
                     <span className={styles.orderText}>Order</span>
@@ -173,6 +170,6 @@ const CartPage = () => {
             />
         </div>
     );
-};
+}
 
 export default CartPage;

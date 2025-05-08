@@ -29,17 +29,28 @@ const isVideo = (url) => {
 
 const VideoPlayer = () => {
     const dispatch = useDispatch();
-    const cartItems = useSelector((state) => state.cart || []);
+
+    const { menuData, loading } = useMenuData();
+
+    // 2️⃣ Беремо slug не з menuData, а з Redux params (щоб воно завжди було синхронно)
+    const slug = useSelector((state) => state.params.slug);
+
+    // 3️⃣ Витягуємо з кошика тільки масив під нашим slug, або порожній масив
+    const cartItems = useSelector((state) => {
+        const store = state.cart;
+        return Array.isArray(store[slug]) ? store[slug] : [];
+    });
+
     const selectedItems = useSelector((state) => state.selection || []);
     const { id } = useParams();
     const videoId = parseInt(id || '0', 10);
 
     const { goToCart } = useCartNavigation();
-    const { menuData, loading } = useMenuData();
 
     const allVideos = useMemo(() => {
-        return menuData?.menu_categories?.flatMap((cat) => cat.menu_items || []) || [];
+        return menuData?.menu_categories?.flatMap((cat) => cat.menu_items ?? []) ?? [];
     }, [menuData]);
+
 
     const [initialIndex, setInitialIndex] = useState(null);
     const [muteStates, setMuteStates] = useState({});
@@ -60,9 +71,14 @@ const VideoPlayer = () => {
     }, []);
 
     const addToCartHandler = (video) => {
-        dispatch(addToCart({ ...video, quantity: video.quantity || 1 }));
+        dispatch(addToCart({
+            ...video,
+            quantity: video.quantity || 1,
+            slug, // ← дуже важливо
+        }));
         closeSlideModal();
     };
+
 
     useEffect(() => {
         if (!allVideos.length) return;
@@ -106,6 +122,9 @@ const VideoPlayer = () => {
 
     return (
         <>
+
+
+
             <div className={styles.wrapper}>
                 <Swiper
                     direction="vertical"
@@ -132,8 +151,10 @@ const VideoPlayer = () => {
                                                 loop
                                                 muted={muteStates[video.id]}
                                                 autoPlay
+                                                playsInline
                                                 className={styles.videoElement}
                                             />
+
                                         ) : (
                                             <ImageWithFallback
                                                 src={mediaUrl}
@@ -157,9 +178,12 @@ const VideoPlayer = () => {
                                                     €{video.price.toFixed(2)}
                                                 </p>
                                                 <h3 className={styles.videoTitle}>{video.title}</h3>
-                                                <p className={`${styles.videoDescription} ${isExpanded ? styles.expanded : ''}`}>
-                                                    {video.description}
-                                                </p>
+                                                {video.description && (
+                                                    <p className={`${styles.videoDescription} ${isExpanded ? styles.expanded : ''}`}>
+                                                        {video.description}
+                                                    </p>
+                                                )}
+
                                             </div>
 
                                             <div className={styles.actionButtons}>

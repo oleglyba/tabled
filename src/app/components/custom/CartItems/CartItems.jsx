@@ -11,23 +11,22 @@ import VideoIndicators from "@/app/components/custom/VideoIndicators/VideoIndica
 
 export default function CartItems() {
     const dispatch = useDispatch();
-    const cartItems = useSelector((state) => state.cart);
 
-    console.log("[CartItems] cartItems:", cartItems);
+    // ✅ Отримуємо slug з Redux
+    const slug = useSelector((state) => state.params.slug);
+
+    // ✅ Отримуємо лише товари поточного ресторану
+    const cartItems = useSelector((state) => state.cart[slug] || []);
 
     const processedCartItems = cartItems.map((item) => ({
         ...item,
         allergen: item.allergen || (Array.isArray(item.allergens) && item.allergens.length > 0),
     }));
 
-    console.log("[CartItems] Оброблені товари:", processedCartItems);
-
     return (
         <div className={styles.cartItems}>
             {processedCartItems.length > 0 ? (
                 processedCartItems.map((cartItem) => {
-                    console.log("[CartItems] Рендеримо item:", cartItem);
-
                     const price = Number(cartItem.price) || 0;
                     const quantity = Number(cartItem.quantity) || 0;
                     const computedTotal = price * quantity;
@@ -36,22 +35,26 @@ export default function CartItems() {
 
                     const mediaUrl = cartItem.main_video || cartItem.image || "";
 
+                    // ✅ Піднімаємо кількість і передаємо slug
                     const handleIncrement = () => {
                         dispatch(updateCartQuantity({
                             id: cartItem.id,
                             quantity: quantity + 1,
+                            slug
                         }));
                     };
 
+                    // ✅ Зменшуємо або видаляємо — з передачею slug
                     const handleDecrement = () => {
                         const newQuantity = quantity - 1;
                         if (newQuantity > 0) {
                             dispatch(updateCartQuantity({
                                 id: cartItem.id,
                                 quantity: newQuantity,
+                                slug
                             }));
                         } else {
-                            dispatch(removeFromCart(cartItem.id));
+                            dispatch(removeFromCart({ id: cartItem.id, slug }));
                             dispatch(removeSelection(cartItem.id));
                         }
                     };

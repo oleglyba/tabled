@@ -7,7 +7,7 @@ import styles from "./CloseButton.module.scss"; // імпортуємо окре
 const CloseButton = ({ onClick, size = 24 }) => {
     return (
         <button className={styles.closeButton} onClick={onClick}>
-            <X size={size} />
+            <X size={size} color="#171717" />
         </button>
     );
 };

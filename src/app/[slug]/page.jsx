@@ -36,29 +36,28 @@ const Restaurant = () => {
     }, []);
 
     const restaurant = useMemo(() => {
-        if (menuData) {
-            console.log("MenuData name:", menuData.name, "slug:", menuData.slug);
-            return {
-                name: menuData.name,
-                // Використовуємо slug з Redux (params), якщо він є, інакше значення з menuData
-                slug: params.slug || menuData.slug,
-                logo_url: "/assets/sensaNome.svg", // або menuData.logo_url
-                client: { color: "#ffffff" }, // або menuData.client.color
-            };
-        } else {
-            return null;
-        }
-    }, [menuData, params.slug]);
+        if (!menuData) return null;
+
+        const safeSlug = params?.slug || menuData?.slug;
+
+        return {
+            name: menuData.name,
+            slug: safeSlug,
+            logo_url: "/assets/sensaNome.svg",
+            client: { color: "#ffffff" },
+        };
+    }, [menuData, params?.slug]);
+
 
     const router = useRouter();
     const dispatch = useDispatch();
 
     const selectedItems = useSelector((state) => state.selection) || [];
-    const cartItems = useSelector((state) => state.cart || []);
     const selectedLanguage = useSelector((state) => state.language);
     const filters = useSelector((state) => state.filters);
     const translations = useTranslations(selectedLanguage);
-
+    const slug = useSelector((state) => state.params.slug);
+    const cartItems = useSelector((state) => state.cart[slug] || []);
     const handleToggleSelection = useCallback(
         (id) => {
             dispatch(toggleSelection(id));
@@ -72,17 +71,22 @@ const Restaurant = () => {
     // Функція базового додавання (для напоїв)
     const handleAddToCartBasic = useCallback(
         (item) => {
+            if (!restaurant?.slug) return; // ⛔ без slug нічого не робимо
+
             const product = {
                 ...item,
                 basePrice: Number(item.price) || 0,
                 doughPrice: 0,
                 extrasPrice: 0,
                 quantity: 1,
+                slug: restaurant.slug
             };
             dispatch(addToCart(product));
         },
-        [dispatch]
+        [dispatch, restaurant] // ⚠️ видали `.slug`, щоб avoid dependency error
     );
+
+
 
     const beveragesRef = useRef(null);
     const categoryRefs = useRef({});
@@ -170,7 +174,7 @@ const Restaurant = () => {
 
     useCategoryObserver({
         categoryRefs,
-        videoCategories,
+        videoCategories:videoCategoriesToShow,
         scrollingManually,
         setActiveCategory,
     });
@@ -186,11 +190,12 @@ const Restaurant = () => {
         dispatch(toggleSelection(beverage.id));
         const isSelected = selectedItems.includes(beverage.id);
         if (isSelected) {
-            dispatch(removeFromCart(beverage.id));
+            dispatch(removeFromCart({ id: beverage.id, slug: restaurant.slug })); // ✅
         } else {
-            dispatch(addToCart({ ...beverage, quantity: 1 }));
+            dispatch(addToCart({ ...beverage, quantity: 1, slug: restaurant.slug })); // ✅
         }
     };
+
 
     // Обрахунок відео з фільтрацією. Додаємо логування для video.name
     // Обрахунок відео з фільтрацією. Додаємо логування для video.title
@@ -241,17 +246,15 @@ const Restaurant = () => {
     }
 
     return (
-        <div
-            style={{ background: restaurant.client.color || "none" }}
-            className={hasBottomBanner ? styles.withBottomBanner : ""}
-        >
+        <div className={`${styles.pageWrapper} ${hasBottomBanner ? styles.withBottomBanner : ''}`}>
+
             {isSearchActive ? (
                 <div className={styles.searchBar}>
                     <div className={styles.inputWrapper}>
                         <input
                             type="text"
                             className={styles.searchInput}
-                            placeholder={translations.searchPlaceholder || "Type for search"}
+                            placeholder={translations.searchPlaceholder || "Type to search"}
                             value={searchQuery}
                             onChange={(e) => {
                                 console.log("Search query:", e.target.value);
@@ -260,12 +263,12 @@ const Restaurant = () => {
                         />
                         {searchQuery && (
                             <button className={styles.clearButton} onClick={() => setSearchQuery("")}>
-                                <Trash2 size={20} color="#737373" />
+                                <Trash2 size={20} color="#737373"/>
                             </button>
                         )}
                     </div>
                     <button className={styles.closeButton} onClick={toggleSearch}>
-                        <X size={20} color="#171717" />
+                        <X size={20} color="#171717"/>
                     </button>
                 </div>
             ) : (
@@ -276,13 +279,13 @@ const Restaurant = () => {
                             src={restaurant.logo_url}
                             alt={restaurant.name}
                             onClick={goToAbout}
-                            style={{ cursor: 'pointer' }}
+                            style={{cursor: 'pointer'}}
                         />
                         <div className={styles.textInfo}>
                             <div
                                 className={styles.restaurantName}
                                 onClick={goToAbout}
-                                style={{ cursor: 'pointer' }}
+                                style={{cursor: 'pointer'}}
                             >
                                 {restaurant.name}
                             </div>
@@ -290,35 +293,37 @@ const Restaurant = () => {
                     </div>
 
 
-                <div className={styles.controls}>
-                            <button className={styles.languageButton} onClick={() => setLanguageModalOpen(true)}>
-                                <span className={styles.languageText}>{selectedLanguage}</span>
-                                <span className={styles.arrowDown}></span>
-                            </button>
-                            <button className={styles.searchButton} onClick={toggleSearch}>
-                                <Search size={20} color="#171717"/>
-                            </button>
-                        </div>
+                    <div className={styles.controls}>
+                        <button className={styles.languageButton} onClick={() => setLanguageModalOpen(true)}>
+                            <span className={styles.languageText}>{selectedLanguage}</span>
+                            <span className={styles.arrowDown}></span>
+                        </button>
+                        <button className={styles.searchButton} onClick={toggleSearch}>
+                            <Search size={20} color="#171717"/>
+                        </button>
                     </div>
-                    )}
+                </div>
+            )}
 
-                    <LanguageModal
-                        isOpen={isLanguageModalOpen}
-                        onClose={() => setLanguageModalOpen(false)}
-                        selectedLanguage={selectedLanguage}
-                        onSelectLanguage={(code) => dispatch(setLanguage(code))}
-                    />
-
-                    <SectionSelect
-                        categories={categories}
-                activeCategory={activeCategory}
-                onCategorySelect={handleScrollToCategory}
-                filters={filters}
+            <LanguageModal
+                isOpen={isLanguageModalOpen}
+                onClose={() => setLanguageModalOpen(false)}
+                selectedLanguage={selectedLanguage}
+                onSelectLanguage={(code) => dispatch(setLanguage(code))}
             />
+
+            {!isSearchActive && (
+                <SectionSelect
+                    categories={categories}
+                    activeCategory={activeCategory}
+                    onCategorySelect={handleScrollToCategory}
+                    filters={filters}
+                />
+            )}
 
             {searchQuery && totalFiltered === 0 ? (
                 <div className={styles.noResults}>
-                    <img src="/icon/NoItem.svg" alt="No items found" />
+                    <img src="/icon/NoItem.svg" alt="No items found"/>
                     <p>No Item Found</p>
                 </div>
             ) : (
@@ -356,7 +361,8 @@ const Restaurant = () => {
                                     ref={(el) => (categoryRefs.current[category.slug] = el)}
                                     className={styles.categorySection}
                                 >
-                                    {filteredVideos.length > 0 && <h2 className={styles.categoryTitle}>{category.name}</h2>}
+                                    {filteredVideos.length > 0 &&
+                                        <h2 className={styles.categoryTitle}>{category.name}</h2>}
                                     <VideoGrid
                                         videos={filteredVideos}
                                         searchQuery={searchQuery}
@@ -374,6 +380,8 @@ const Restaurant = () => {
                         })}
                     </div>
 
+                    <div className={styles.contentDivider}/>
+
                     <div ref={beveragesRef}>
                         <BeveragesSection
                             beverages={beveragesList}
@@ -386,7 +394,7 @@ const Restaurant = () => {
                 </>
             )}
 
-            <BottomBanner selectedCount={totalCartQuantity} onClick={goToCart} />
+            <BottomBanner selectedCount={totalCartQuantity} onClick={goToCart}/>
 
             {modalOpen && selectedVideo && (
                 <SlideModal
@@ -394,10 +402,11 @@ const Restaurant = () => {
                     onClose={() => setModalOpen(false)}
                     video={selectedVideo}
                     onAddToCart={(videoData) => {
-                        dispatch(addToCart(videoData));
+                        dispatch(addToCart({ ...videoData, slug: restaurant.slug }));
                         setModalOpen(false);
                     }}
                 />
+
             )}
         </div>
     );

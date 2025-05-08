@@ -1,7 +1,7 @@
 .videoGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Два елементи PeopleAlsoAdded ряд */
-  gap: 16px; /* Проміжок між картками */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 .videoCard {
@@ -11,7 +11,6 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   text-align: left;
   padding: 0;
   max-width: 100%;
@@ -28,22 +27,21 @@
 .imagePlayer {
   width: 100%;
   height: 267.44px;
-  display: flex;
   object-fit: cover;
+  display: flex;
 }
 
-/* Верхній блок індикаторів, який розташовується поверх відео */
+/* Верхній блок індикаторів */
 .videoOverlayTop {
   position: absolute;
   top: 10px;
   left: 10px;
   display: flex;
-  flex-wrap: wrap; /* Дозволяє переносити блоки на наступний рядок */
+  flex-wrap: wrap;
   gap: 8px;
   z-index: 2;
 }
 
-/* Стилі для кожного блоку індикатора */
 .newIndicator,
 .vegetarianIndicator,
 .weight {
@@ -54,63 +52,73 @@
   align-items: center;
 }
 
-/* Стилі для зображення індикатора */
 .iconIndicator {
   width: 16px;
   height: 16px;
   margin-right: 4px;
 }
 
-/* Стилі для тексту індикатора */
 .indicatorText {
   font-family: 'Outfit', sans-serif;
   font-weight: 500;
   font-size: 12px;
   line-height: 12px;
-  letter-spacing: 0;
   color: #fff;
 }
 
-/* Нижній оверлей */
+/* Нижній блок з ціною, назвою і кнопкою */
 .videoOverlayBottom {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 10px;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  height: 36px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+
+  background-image: linear-gradient(
+                  to top,
+                  rgba(0, 0, 0, 0.8) 0%,
+                  rgba(0, 0, 0, 0) 25%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 120px;
 }
 
 .infoLeft {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  gap: 2px;
+  max-width: calc(100% - 44px); /* з урахуванням кнопки 36px + відступи */
 }
 
 .videoPrice {
   font-size: 16px;
   font-weight: 600;
-  max-width: 120px;
   color: white;
   margin: 0;
+  line-height: 16px;
 }
 
 .videoTitle {
   font-size: 12px;
   font-weight: 500;
-  max-width: 100px;
   color: white;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 12px;
 }
 
+/* Кнопка додавання в кошик */
 .plusContainer {
   width: 36px;
-  height: 36px;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -122,9 +130,6 @@
   transition: all 0.3s ease;
 }
 
-
-
-/* Стилі при виборі (check) */
 .plusContainer.selected {
   background: #41BD7366;
   border: 1px solid #41BD73;
@@ -135,7 +140,6 @@
   height: 16px;
 }
 
-/* Контейнер для повідомлення "нічого не знайдено" */
 .noResultsContainer {
   display: flex;
   flex-direction: column;

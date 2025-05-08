@@ -10,16 +10,45 @@
 
 .minusButton,
 .plusButton {
+  width: 24px;
+  height: 24px;
   border: none;
   background: transparent;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.minusButton {
+  color: #A2A2A2;
+
+  svg {
+    stroke: #A2A2A2;
+  }
+}
+
+.plusButton {
+  color: #171717;
+
+  svg {
+    stroke: #171717;
+  }
 }
 
 .quantityText {
   font-size: 16px;
-  min-width: 24px;
-  text-align: center;
+  min-width: 32px;
+  height: 24px;
+  color: #171717;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
