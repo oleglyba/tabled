@@ -5,6 +5,7 @@ import Image from "next/image";
 import styles from "./About.module.scss";
 import TopBar from "@/app/components/TopBar/TopBar";
 import useMenuData from "@/app/hook/data/useMenuData";
+import MenuCard from "@/app/components/MenuCard/MenuCard";
 
 
 const AboutPage = () => {
@@ -67,6 +68,11 @@ const AboutPage = () => {
                     Le Senza Nome, a Neapolitan pizzeria in Paris, offers you wood-fired
                     pizzas, homemade with quality Italian products.
                 </p>
+
+                <MenuCard />
+
+                <MenuCard withImage title="General Menu" />
+
                 <div className={styles.infoContainer}>
                     {infoItems.map(({ icon, text, type }) => (
                         <div className={styles.infoItem} key={text}>

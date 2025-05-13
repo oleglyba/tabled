@@ -1,0 +1,97 @@
+.menuCard {
+  position: relative;
+  width: 100%;
+  max-width: 343px;
+  aspect-ratio: 343 / 136;
+  padding: 16px;
+  border-radius: 8px;
+  background: linear-gradient(
+                  180deg,
+                  rgba(255, 255, 255, 0.1) -50px,
+                  rgba(0, 0, 0, 0.25) 100%
+  );
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 0 auto 10px;
+}
+
+.withImage {
+  background: url("/icon/about/breakfast.svg") center/cover no-repeat;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(0, 0, 0, 0.5) 100%
+    );
+    z-index: 1;
+  }
+}
+
+.logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Outfit", sans-serif;
+  font-size: clamp(2rem, 8vw, 4rem);
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+.tags {
+  display: flex;
+  gap: 4px;
+  position: absolute;
+  top: 12px;
+  left: 16px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 40px;
+  background: rgba(0, 0, 0, 0.4); // 40% чорний
+  gap: 10px;
+
+  font-family: "Outfit", sans-serif;
+  font-weight: 500; // Medium
+  font-size: 12px;
+  line-height: 100%;
+  color: #ffffff;
+}
+
+.icon {
+  width: 12px;
+  height: 12px;
+}
+
+
+.menuName {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  color: white;
+  z-index:2;
+
+}
+
+@media (max-width: 360px) {
+  .menuCard {
+    padding: 12px;
+    border-radius: 6px;
+  }
+
+  .logo {
+    font-size: clamp(1.5rem, 10vw, 3rem);
+  }
+}
